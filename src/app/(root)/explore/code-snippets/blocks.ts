@@ -1,0 +1,5 @@
+export const CODE_BLOCK = {
+    "id": "1",
+    "name": "ROTATE_WORDS_CODE",
+    "code": "import { AnimatePresence, motion } from \"framer-motion\";\nexport default function RotateText() {\n  const words = [\"ROTATE\", \"BETWEEN\", \"TEXT\"];\n  const [index, setIndex] = React.useState(0);\n\n  React.useEffect(() => {\n    const interval = setInterval(() => {\n      setIndex((prevIndex) => (prevIndex + 1) % words.length);\n    }, 3000);\n\n    // Clean up interval on unmount\n    return () => clearInterval(interval);\n  }, []);\n  return (\n    <AnimatePresence mode=\"wait\">\n      <motion.h1\n        key={words[index]}\n        initial={{ opacity: 0, y: -50 }}\n        animate={{ opacity: 1, y: 0 }}\n        exit={{ opacity: 0, y: 50 }}\n        transition={{ duration: 0.5 }}\n        className=\"text-center font-display text-4xl font-bold tracking-[-0.02em] drop-shadow-sm md:text-7xl md:leading-[5rem]\"\n      >\n        {words[index]}\n      </motion.h1>\n    </AnimatePresence>\n  );\n}\n"
+  }

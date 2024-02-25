@@ -1,3 +1,5 @@
+"use client"
+
 import React from "react";
 import {
     DropdownMenu,
@@ -12,9 +14,13 @@ import { Button } from "@/components/ui/button";
 // import { signOut } from "next-auth/react";
 import Image from "next/image";
 import { Badge } from "../ui/badge";
+import { useRouter } from "next/navigation";
 
 export default function ProfileDropdown() {
     //   const { data: session } = useSession();
+
+    const router = useRouter();
+    
     const session = {
         user: {
             name: "John Doe",
@@ -23,6 +29,7 @@ export default function ProfileDropdown() {
 
     const signOut = () => {
         console.log("Signing out");
+        router.push("/signin");
     };
     return (
         <DropdownMenu>

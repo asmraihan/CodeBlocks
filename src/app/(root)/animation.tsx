@@ -1,13 +1,19 @@
 "use client";
 
+import { Icons } from "@/components/icons";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
+import Link from "next/link";
 
-export function Animation() {
+
+export function Animation({githubStars} : {githubStars: number | null}) {
   const FADE_UP_ANIMATION_VARIANTS = {
     hidden: { opacity: 0, y: 10 },
     show: { opacity: 1, y: 0, transition: { type: "spring" } },
   };
+
+
   return (
     <motion.div
       initial="hidden"
@@ -47,15 +53,30 @@ export function Animation() {
       </motion.h1>
 
       <motion.p
-        className="mt-6 text-lg leading-8 text-muted-foreground"
+        className="mt-2 text-lg leading-8 text-muted-foreground"
         variants={FADE_UP_ANIMATION_VARIANTS}
       >
         Snippets is a code snippet manager that allows you to create, share, and
         explore code snippets.
       </motion.p>
-
       <motion.div
-        className="mt-10 flex items-center justify-center gap-x-6"
+        className="mt-4 flex items-center justify-center gap-x-6"
+        variants={FADE_UP_ANIMATION_VARIANTS}
+      >
+        <Link href={"https://github.com/asmraihan/CodeBlocks"} target="_blank" rel="noreferrer">
+          <Badge
+            aria-hidden="true"
+            className="rounded-md px-3.5 py-1.5"
+            variant="secondary"
+          >
+            <Icons.gitHub className="mr-2 size-3.5" aria-hidden="true" />
+            {githubStars} stars on GitHub
+          </Badge>
+          <span className="sr-only">GitHub</span>
+        </Link>
+      </motion.div>
+      <motion.div
+        className="mt-6 flex items-center justify-center gap-x-6"
         variants={FADE_UP_ANIMATION_VARIANTS}
       >
         <Button>Get Started</Button>

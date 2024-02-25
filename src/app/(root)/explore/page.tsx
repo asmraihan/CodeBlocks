@@ -146,7 +146,7 @@ export default function Home() {
                 >
                   Twitter
                 </Link>
-                &nbsp;@abdo_eth or create a pull request on the GitHub repo.
+                &nbsp;@asmraihan.
               </p>
             </div>
           )}
