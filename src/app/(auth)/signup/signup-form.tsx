@@ -19,12 +19,12 @@ import {
 import { Input } from "@/components/ui/input"
 import { Icons } from "@/components/icons"
 import { PasswordInput } from "@/components/shared/password-input" 
+import {  userRegister } from "@/lib/action/authActions"
 
 
 export function SignUpForm() {
   const router = useRouter()
   const [isPending, startTransition] = React.useTransition()
-
   // react-hook-form
   const form = useForm<any>({
     defaultValues: {
@@ -34,7 +34,20 @@ export function SignUpForm() {
   })
 
   function onSubmit(data: any) {
-    
+
+    startTransition(async () => {
+      try {
+        await userRegister(data).then((res) => {
+          console.log(res)
+        })
+        router.push("/signup/verify-email")
+        toast.message("Check your email", {
+          description: "We sent you a 6-digit verification code.",
+        })
+      } catch (err) {
+        console.log(err, "asm")
+      }
+    })
   }
 
   return (

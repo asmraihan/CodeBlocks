@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { addSnippet } from "@/app/action/addSnippet"; 
+import { addSnippet } from "@/lib/action/addSnippet"; 
 import { LanguageSelector } from "./language-selector";
 import CodeEditor from "./code-editor";
 import { toast } from "sonner";

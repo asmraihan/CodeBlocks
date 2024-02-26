@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 
 import React from "react";
 import { Animation } from "./animation";
-import { getGithubStars } from "../action/githubStar";
+import { getGithubStars } from "../../lib/fetchers/githubStar";
 
 export default async function Page() {
 

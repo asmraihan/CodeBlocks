@@ -19,6 +19,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Icons } from "@/components/icons"
 import { PasswordInput } from "@/components/shared/password-input"
+import { userLogin } from "@/lib/action/authActions"
 
 
 
@@ -26,7 +27,6 @@ import { PasswordInput } from "@/components/shared/password-input"
 
 export function SignInForm() {
     const router = useRouter()
-    const isLoaded = false
     const [isPending, startTransition] = React.useTransition()
 
     // react-hook-form
@@ -35,15 +35,18 @@ export function SignInForm() {
     })
 
     function onSubmit(data: any) {
-        if (!isLoaded) return
 
         startTransition(async () => {
             try {
-             
+              await userLogin(data).then((res) => {
+                console.log(res)
+              })
+              router.push("/")
             } catch (err) {
+              console.log(err, "asm")
             }
-        })
-    }
+          })
+        }
 
     return (
         <Form {...form}>

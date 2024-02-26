@@ -1,4 +1,3 @@
-"use client"
 
 import React from "react";
 import {
@@ -15,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { Badge } from "../ui/badge";
 import { useRouter } from "next/navigation";
+import { logout } from "@/lib/action/authActions";
 
 export default function ProfileDropdown() {
     //   const { data: session } = useSession();
@@ -27,9 +27,9 @@ export default function ProfileDropdown() {
         }
     }
 
-    const signOut = () => {
+    const signOut = async () => {
         console.log("Signing out");
-        router.push("/signin");
+        await logout();
     };
     return (
         <DropdownMenu>
