@@ -3,7 +3,7 @@
 import { prisma } from "../../../prisma/db";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-const bcrypt = require("bcryptjs");
+import bcrypt from "bcryptjs";
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";

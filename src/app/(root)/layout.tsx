@@ -5,11 +5,15 @@ import { AspectRatio } from "@/components/ui/aspect-ratio"
 import { Icons } from "@/components/icons"
 import Navbar from "@/components/shared/navbar"
 import Footer from "@/components/shared/footer"
+import { getSession } from "@/lib/action/authActions"
 
-export default function GeneralLayout({ children }: React.PropsWithChildren) {
+export default async function GeneralLayout({ children }: React.PropsWithChildren) {
+
+  const session = await getSession();
+  console.log(session, "session")
   return (
     <div>
-      <Navbar />
+      <Navbar session={session}/>
       {children}
       <Footer />
     </div>

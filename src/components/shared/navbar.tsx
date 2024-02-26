@@ -7,7 +7,7 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 import { CodeIcon, MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import ProfileDropdown from "./profile-dropdown";
@@ -15,29 +15,20 @@ import { ModeToggle } from "./mode-toggle";
 
 import Cmdk from "./cmdk";
 
-export default function Navbar() {
+export default function Navbar({ session }: any) {
   const pathname = usePathname();
+  const router = useRouter();
+  console.log(session)
 
-//   const { data: session } = useSession();
-
-
-const session = {
-    user: {
-        name: "John Doe",
-        image: "https://randomuser.me/api"
-    }
-}
-
-const signIn = () => {
-    console.log("Signing in");
-}
-return (
+  const signIn = () => {
+    router.push("/signin");
+  }
+  return (
     <header
-      className={`sticky top-0 border-b px-3 z-50 ${
-        pathname === "/projects"
+      className={`sticky top-0 border-b px-3 z-50 ${pathname === "/projects"
           ? "bg-background"
           : "supports-backdrop-blur:bg-background/80 backdrop-blur"
-      }`}
+        }`}
     >
       <nav
         className="flex items-center justify-between py-3 mx-auto max-w-7xl"
@@ -99,13 +90,17 @@ return (
             {/* <Menu className="h-6 w-6" aria-hidden="true" /> */}
           </button>
         </div>
-        <div className="flex items-center space-x-1">
+        <div className="flex items-center space-x-3">
           <Cmdk session={session} />
 
-          {session && <ProfileDropdown />}
+          {session && <ProfileDropdown session={session} />}
 
           {!session && (
-            <Button variant="default" onClick={() => signIn()}>
+            <Button
+             variant="default" 
+             onClick={() => signIn()}
+             className="mx-8"
+             >
               Log in
             </Button>
           )}
