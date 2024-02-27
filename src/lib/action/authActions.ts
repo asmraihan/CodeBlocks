@@ -7,6 +7,10 @@ import bcrypt from "bcryptjs";
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
+import { authSchema } from "../validations/auth";
+import type { z } from "zod"
+
+type Inputs = z.infer<typeof authSchema>
 
 const secretKey = process.env.JWT_KEY;
 
@@ -50,24 +54,28 @@ export async function userRegister(data: any) {
 }
 
 
-export async function userLogin(data: any) {
+export async function userLogin(data: Inputs) {
 
   const user = await prisma.user.findUnique({ where: { email: data.email } });
-  console.log(user)
+
   if (!user) {
-    return new NextResponse("'Invalid email or password'", { status: 401 })
+    return { error: "User not found, please try again." };
   }
   const isPasswordValid = await bcrypt.compare(data.password, user.password);
-
+  
   if (!isPasswordValid) {
-    return new NextResponse("'Invalid email or password'", { status: 401 })
+    return { error: "Invalid email or password" };
   }
 
-  // Create the session
-  const expires = new Date(Date.now() + 10 * 180000);
-  const session = await encrypt({ user, expires });
-  // Save the session in a cookie
-  cookies().set("session", session, { expires, httpOnly: true });
+  if (isPasswordValid) {
+    // Create the session
+    const expires = new Date(Date.now() + 10 * 180000);
+    const session = await encrypt({ user, expires });
+    // Save the session in a cookie
+    cookies().set("session", session, { expires, httpOnly: true });
+    return user;
+  }
+
 }
 
 export async function logout() {

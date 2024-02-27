@@ -20,34 +20,50 @@ import { Input } from "@/components/ui/input"
 import { Icons } from "@/components/icons"
 import { PasswordInput } from "@/components/shared/password-input"
 import { userLogin } from "@/lib/action/authActions"
+import { authSchema } from "@/lib/validations/auth"
+import { toast } from "sonner"
 
 
 
-// type Inputs = z.infer<typeof authSchema>
+type Inputs = z.infer<typeof authSchema>
 
 export function SignInForm() {
     const router = useRouter()
     const [isPending, startTransition] = React.useTransition()
 
     // react-hook-form
-    const form = useForm<any>({
 
-    })
+    
+    const form = useForm<Inputs>({
+        // resolver: zodResolver(authSchema),
+        // defaultValues: {
+        //   email: "",
+        //   password: "",
+        // },
+      })
 
-    function onSubmit(data: any) {
 
+      async function onSubmit(data: Inputs) {
         startTransition(async () => {
-            try {
-              await userLogin(data).then((res) => {
-                console.log(res)
-              })
-              router.push("/")
-            } catch (err) {
-              console.log(err, "asm")
+          try {
+            const user = await userLogin(data);
+            console.log(user);
+           if (user.id) {
+            router.push("/")
+           } else {
+            toast.error("Error", {
+              description: "Invalid credentials", 
+            });
+           }
+          } catch (err) {
+            if (err instanceof Error) { 
+              toast.error("Error", {
+                description: err.message, 
+              });
             }
-          })
-        }
-
+          }
+        });
+      }
     return (
         <Form {...form}>
             <form

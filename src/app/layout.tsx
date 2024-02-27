@@ -42,7 +42,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <Container>{children}</Container>
+        {children}
           {/* div wrapping the footer so that its at bottom of page */}
          
           <Toaster position="top-center" richColors />

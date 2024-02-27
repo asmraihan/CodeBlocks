@@ -14,15 +14,18 @@ import ProfileDropdown from "./profile-dropdown";
 import { ModeToggle } from "./mode-toggle";
 
 import Cmdk from "./cmdk";
+import { useAuthStore } from "@/lib/store/authStore";
 
 export default function Navbar({ session }: any) {
   const pathname = usePathname();
   const router = useRouter();
-  console.log(session)
 
   const signIn = () => {
     router.push("/signin");
   }
+
+  const user = useAuthStore((state) => state.user);
+  console.log(user, "user zustand")
   return (
     <header
       className={`sticky top-0 border-b px-3 z-50 ${pathname === "/projects"
