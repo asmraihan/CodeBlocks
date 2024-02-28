@@ -52,9 +52,9 @@ export const useAuthStore = create<authStore>((set) => ({
         set({ user: null })
     },
     login: async (data) => {
-        const user = await userLogin(data);
-        if (user.id) {
-            set({ user })
+        const res = await userLogin(data);
+        if (res && res.message) {
+            set({ user: res })
         }
     },
     register: async (data) => {

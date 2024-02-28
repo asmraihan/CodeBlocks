@@ -16,12 +16,15 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { Spotlight } from "./spotlight";
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { vividBlack } from "@/styles/vivid-black"
 import { ROTATE_WORDS_CODE } from "./code-snippets";
 import { RotateText } from "./variant-previews";
 
 export default function Home() {
   let generateZeros = (n: number) => Array(n).fill(0);
   let [keys, setKeys] = React.useState(generateZeros(20));
+
   let variants = [
     {
       name: "Rotate Between Words",
@@ -40,6 +43,7 @@ export default function Home() {
   }
 
   let [query, setQuery] = React.useState("");
+
   let filteredVariants =
     query === ""
       ? variants
@@ -118,11 +122,11 @@ export default function Home() {
                     <CardContent className="space-y-2">
                       <div className="rounded-md bg-primary-foreground dark:bg-primary-foreground p-6 mt-6">
                         <ScrollArea className="h-96">
-                          <pre>
-                            <code className="grid gap-1 text-sm text-black dark:text-white [&_span]:h-4">
-                              {variant.code}
-                            </code>
-                          </pre>
+                          <SyntaxHighlighter showLineNumbers customStyle={{ background: 'transparent' }} 
+                          //@ts-ignore
+                          language="jsx" style={vividBlack}>
+                            {variant.code}
+                          </SyntaxHighlighter>
                         </ScrollArea>
                       </div>
                     </CardContent>

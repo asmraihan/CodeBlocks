@@ -56,7 +56,7 @@ export function Animation({githubStars} : {githubStars: number | null}) {
         className="mt-2 text-lg leading-8 text-muted-foreground"
         variants={FADE_UP_ANIMATION_VARIANTS}
       >
-        Snippets is a code snippet manager that allows you to create, share, and
+        Code Blocks is a code snippet manager that allows you to create, share, and
         explore code snippets.
       </motion.p>
       <motion.div

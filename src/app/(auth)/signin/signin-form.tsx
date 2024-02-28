@@ -33,37 +33,37 @@ export function SignInForm() {
 
     // react-hook-form
 
-    
     const form = useForm<Inputs>({
-        // resolver: zodResolver(authSchema),
-        // defaultValues: {
-        //   email: "",
-        //   password: "",
-        // },
-      })
+        resolver: zodResolver(authSchema),
+        defaultValues: {
+          email: "",
+          password: "",
+        },
+    })
 
 
-      async function onSubmit(data: Inputs) {
+    async function onSubmit(data: Inputs) {
         startTransition(async () => {
-          try {
-            const user = await userLogin(data);
-            console.log(user);
-           if (user.id) {
-            router.push("/")
-           } else {
-            toast.error("Error", {
-              description: "Invalid credentials", 
-            });
-           }
-          } catch (err) {
-            if (err instanceof Error) { 
-              toast.error("Error", {
-                description: err.message, 
-              });
+            try {
+                const res = await userLogin(data);
+                console.log(res);
+                if (res && res.message) {
+                    router.push("/");
+                } else {
+                    toast.error("Error", {
+                        description: "Invalid credentials",
+                    });
+                }
+            } catch (err) {
+                if (err instanceof Error) {
+                    toast.error("Error", {
+                        description: err.message,
+                    });
+                }
             }
-          }
         });
-      }
+    }
+
     return (
         <Form {...form}>
             <form

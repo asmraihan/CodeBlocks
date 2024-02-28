@@ -18,34 +18,47 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Icons } from "@/components/icons"
-import { PasswordInput } from "@/components/shared/password-input" 
-import {  userRegister } from "@/lib/action/authActions"
+import { PasswordInput } from "@/components/shared/password-input"
+import { userRegister } from "@/lib/action/authActions"
+import { authSchema } from "@/lib/validations/auth"
 
+type Inputs = z.infer<typeof authSchema>
 
 export function SignUpForm() {
   const router = useRouter()
   const [isPending, startTransition] = React.useTransition()
   // react-hook-form
-  const form = useForm<any>({
+
+  const form = useForm<Inputs>({
+    resolver: zodResolver(authSchema),
     defaultValues: {
       email: "",
       password: "",
     },
   })
 
+
   function onSubmit(data: any) {
 
     startTransition(async () => {
       try {
-        await userRegister(data).then((res) => {
-          console.log(res)
-        })
-        router.push("/signup/verify-email")
-        toast.message("Check your email", {
-          description: "We sent you a 6-digit verification code.",
-        })
+        const res = await userRegister(data);
+        if (res && res.message) {
+          router.push("/signup/verify-email")
+          toast.message("Check your email", {
+            description: "We sent you a 6-digit verification code.",
+          })
+        } else {
+          toast.error("Error", {
+            description: "Invalid credentials",
+          });
+        }
       } catch (err) {
-        console.log(err, "asm")
+        if (err instanceof Error) {
+          toast.error("Error", {
+            description: err.message,
+          });
+        }
       }
     })
   }

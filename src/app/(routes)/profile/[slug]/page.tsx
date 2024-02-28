@@ -7,9 +7,9 @@ export default async function SettingsProfilePage() {
 
   const session = await getSession();
   console.log(session, "session")
-  // if (session?.user) {
-  //   redirect("/private");
-  // }
+  if (!session?.user) {
+    redirect("/signup");
+  }
   return (
     <div className="space-y-6">
       <div>
