@@ -1,9 +1,21 @@
 import React from "react";
+import { HeartFilledIcon } from "@radix-ui/react-icons";
+import { wrap } from "@motionone/utils";
 import {
   motion,
   AnimatePresence,
+  useScroll,
+  useSpring,
+  useTransform,
+  useMotionValue,
+  useVelocity,
+  useAnimationFrame,
 } from "framer-motion";
 
+interface ParallaxProps {
+  children: string;
+  baseVelocity: number;
+}
 
 export function RotateText() {
   const words = ["ROTATE", "BETWEEN", "TEXT"];
@@ -17,7 +29,6 @@ export function RotateText() {
     // Clean up interval on unmount
     return () => clearInterval(interval);
   }, []);
-  
   return (
     <AnimatePresence mode="wait">
       <motion.h1

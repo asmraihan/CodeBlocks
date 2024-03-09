@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import UploadButton from "./upload-button";
+import { redirect } from 'next/navigation'
 
 export default function FormUpload() {
   const [code, setCode] = React.useState("");
@@ -26,6 +27,7 @@ export default function FormUpload() {
           toast.error("Something went wrong. Please try again.");
         } else {
           toast.success("Snippet created successfully. Redirecting...");
+          // redirect("/profile");
         }
       }}
       className="py-8"

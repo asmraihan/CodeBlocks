@@ -1,11 +1,6 @@
-import React from "react";
-import {
-  motion,
-  AnimatePresence,
-} from "framer-motion";
 
-
-export function RotateText() {
+export const ROTATE_WORDS_CODE = `import { AnimatePresence, motion } from "framer-motion";
+export default function RotateText() {
   const words = ["ROTATE", "BETWEEN", "TEXT"];
   const [index, setIndex] = React.useState(0);
 
@@ -17,7 +12,6 @@ export function RotateText() {
     // Clean up interval on unmount
     return () => clearInterval(interval);
   }, []);
-  
   return (
     <AnimatePresence mode="wait">
       <motion.h1
@@ -33,3 +27,4 @@ export function RotateText() {
     </AnimatePresence>
   );
 }
+`;

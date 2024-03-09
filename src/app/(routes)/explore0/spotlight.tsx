@@ -58,14 +58,14 @@ export function Spotlight({ filteredVariants }: any) {
               <CommandItem
                 key={index}
                 onSelect={() => {
-                  window.location.href = `#${variant.title
+                  window.location.href = `#${variant.name
                     .toLowerCase()
                     .replace(" ", "-")}`;
                   setOpen(false);
                 }}
               >
                 <CodeIcon className="mr-2 h-4 w-4" />
-                <span>{variant.title}</span>
+                <span>{variant.name}</span>
               </CommandItem>
             ))}
           </CommandGroup>

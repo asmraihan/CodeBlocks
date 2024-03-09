@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -20,54 +20,19 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vividBlack } from "@/styles/vivid-black"
 import { ROTATE_WORDS_CODE } from "./code-snippets";
 import { RotateText } from "./variant-previews";
-import { getSnippets } from "@/lib/fetchers/getSnippets";
-
-import { LiveProvider, LivePreview, LiveEditor, LiveError } from 'react-live';
-import {
-  motion,
-  AnimatePresence,
-} from "framer-motion";
-
-import { transform } from '@babel/standalone';
-
-
-interface Snippet {
-  id: string;
-  createdAt: Date;
-  updatedAt: Date;
-  published: boolean;
-  title: string;
-  code: string;
-  language: string;
-  authorId: string;
-};
 
 export default function Home() {
   let generateZeros = (n: number) => Array(n).fill(0);
   let [keys, setKeys] = React.useState(generateZeros(20));
 
+  let variants = [
+    {
+      name: "Rotate Between Words",
+      preview: <RotateText key={keys[7]} />,
+      code: ROTATE_WORDS_CODE,
+    },
 
-  // let variants = [
-  // {
-  //   name: "Rotate Between Words",
-  //   preview: <RotateText key={keys[7]} />,
-  //   code: ROTATE_WORDS_CODE,
-  // },
-
-  // ];
-
-  const [variants, setVariants] = React.useState<Snippet[] | { error: any }[]>([]);
-
-  console.log(variants, "variants")
-
-  useEffect(() => {
-    const data = async () => {
-      const data = await getSnippets();
-      setVariants(data as Snippet[]);
-    };
-    data();
-  }
-    , []);
+  ];
 
   function restartAnimation(index: number) {
     setKeys((prevKeys) => {
@@ -82,48 +47,29 @@ export default function Home() {
   let filteredVariants =
     query === ""
       ? variants
-      : variants.filter((variant): variant is Snippet => {
-        if ('error' in variant) {
-          return false;
-        }
-        return variant.title.toLowerCase().includes(query.toLowerCase());
+      : variants.filter((variant) => {
+        return variant.name.toLowerCase().includes(query.toLowerCase());
       });
 
-
-  const scope = { RotateText };
-
-  const code = `
-  <RotateText />
-`
-
-return (
-  <div className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8">
-    <div className="w-full">
-      <div className="flex flex-col items-center min-h-screen py-2 space-y-12">
-        <div className="mb-6 w-full">
-          <Spotlight filteredVariants={filteredVariants} />
-        </div>
-        {filteredVariants && filteredVariants.length > 0 ? (
-          filteredVariants.map((variant : any, index) => {
-
-            let code = variant.code;
-            // Transpile JSX to JavaScript
-            try {
-              code = transform(code, { presets: ['react', 'es2015'] }).code;
-            } catch (error) {
-              console.error('Failed to transpile code:', error);
-            }
-
-            return (
+  return (
+    <div className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8">
+      <div className="w-full">
+        <div className="flex flex-col items-center min-h-screen py-2 space-y-12">
+          <div className="mb-6 w-full">
+            <Spotlight filteredVariants={filteredVariants} />
+          </div>
+          {filteredVariants.length > 0 ? (
+            filteredVariants.map((variant, index) => (
               <Tabs defaultValue="preview" className="w-full" key={index}>
                 <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center">
                   <div className="flex justify-between w-full mb-2 lg:mb-0">
                     <h1
-                      id={variant.title.toLowerCase().replace(" ", "-")}
+                      id={variant.name.toLowerCase().replace(" ", "-")}
                       className="text-xl"
                     >
-                      {variant.title}
+                      {variant.name}
                     </h1>
+
                     <Button
                       variant="ghost"
                       className="lg:hidden"
@@ -135,9 +81,14 @@ return (
                   </div>
                   <div className="flex flex-col lg:flex-row space-y-4 lg:space-y-0 space-x-0 lg:space-x-6">
                     <TabsList className="grid w-[355px] lg:w-[400px] grid-cols-2">
-                      <TabsTrigger value="preview">Preview</TabsTrigger>
-                      <TabsTrigger value="code">Code</TabsTrigger>
+                      <TabsTrigger value="preview">
+                        Preview
+                      </TabsTrigger>
+                      <TabsTrigger value="code">
+                        Code
+                      </TabsTrigger>
                     </TabsList>
+
                     <div className="hidden lg:flex space-x-6">
                       <TooltipProvider>
                         <Tooltip>
@@ -158,14 +109,11 @@ return (
                     </div>
                   </div>
                 </div>
+
                 <TabsContent value="preview">
                   <Card className="bg-background">
                     <CardContent className="bg-background text-primary space-y-2 mt-4 overflow-hidden">
-                      <LiveProvider code={variant.code}  scope={{ React, motion, AnimatePresence }}>
-                        <LiveEditor />
-                        <LiveError />
-                        <LivePreview />
-                      </LiveProvider>
+                      {variant.preview}
                     </CardContent>
                   </Card>
                 </TabsContent>
@@ -174,9 +122,9 @@ return (
                     <CardContent className="space-y-2">
                       <div className="rounded-md bg-primary-foreground dark:bg-primary-foreground p-6 mt-6">
                         <ScrollArea className="h-96">
-                          <SyntaxHighlighter showLineNumbers customStyle={{ background: 'transparent' }}
-                            //@ts-ignore
-                            language="jsx" style={vividBlack}>
+                          <SyntaxHighlighter showLineNumbers customStyle={{ background: 'transparent' }} 
+                          //@ts-ignore
+                          language="jsx" style={vividBlack}>
                             {variant.code}
                           </SyntaxHighlighter>
                         </ScrollArea>
@@ -185,31 +133,29 @@ return (
                   </Card>
                 </TabsContent>
               </Tabs>
-            );
-          })
-        ) : (
-          <div>
-            <h1 className="text-center font-display text-4xl font-bold tracking-[-0.02em] drop-shadow-sm md:text-7xl md:leading-[5rem]">
-              No variants found.
-            </h1>
-            <p className="text-center">
-              {" "}
-              If you want to see a variant added, please message me on{" "}
-              <Link
-                className="text-primary underline"
-                href="https://www.facebook.com/asmraihanbh"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Facebook
-              </Link>
-              &nbsp;@asmraihanbh.
-            </p>
-          </div>
-        )}
+            ))
+          ) : (
+            <div>
+              <h1 className="text-center font-display text-4xl font-bold tracking-[-0.02em] drop-shadow-sm md:text-7xl md:leading-[5rem]">
+                No variants found.
+              </h1>
+              <p className="text-center">
+                {" "}
+                If you want to see a variant added, please message me on{" "}
+                <Link
+                  className="text-primary underline"
+                  href="https://twitter.com/abdo_eth"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Twitter
+                </Link>
+                &nbsp;@asmraihan.
+              </p>
+            </div>
+          )}
+        </div>
       </div>
     </div>
-  </div>
-)
-
-        }
+  );
+}

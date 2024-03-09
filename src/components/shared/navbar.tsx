@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { usePathname, useRouter } from "next/navigation";
+            <CodeIcon className="h-[1.4rem] w-[1.4rem]" />
 
 import { CodeIcon, MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import ProfileDropdown from "./profile-dropdown";

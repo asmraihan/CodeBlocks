@@ -64,6 +64,6 @@ model Snippet {
   code      String
   language  String
 
-  author   User   @relation(fields: [authorId], references: [id])
   authorId String @map("author_id") @db.ObjectId
+  author   User   @relation(fields: [authorId], references: [id])
 }

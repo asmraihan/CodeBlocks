@@ -12,7 +12,7 @@ export default function UploadButton({ canSubmit }: { canSubmit: boolean }) {
       type="submit"
       className="float-right mt-6 mb-20"
     >
-      {pending ? "Creating..." : "Create Snippet"}
+      {pending ? "Posting..." : "Post Code"}
     </Button>
   );
 }

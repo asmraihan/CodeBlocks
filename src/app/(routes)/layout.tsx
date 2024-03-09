@@ -16,7 +16,9 @@ export default async function GeneralLayout({ children }: React.PropsWithChildre
     <div>
       <Container>
         <Navbar session={session} />
-        {children}
+        <div className="min-h-[calc(100vh-64px)]">
+          {children}
+        </div>
         <Footer />
       </Container>
     </div>
