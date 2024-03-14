@@ -5,20 +5,30 @@ import { useFieldArray, useForm } from "react-hook-form"
 
 import { cn } from "@/lib/utils"
 
-
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
 import { toast } from "@/components/ui/use-toast"
-import { AvatarUpload } from "@/components/ui/AvatarUpload"
+import { AvatarUpload } from "@/components/ui/avatar-upload"
+import { updateProfile } from "@/lib/action/profileUpdate"
+
+import { ProfileFormData } from "@/lib/types"
 
 
 
-export function ProfileForm() {
+export function ProfileForm({session} : {session: any}) {
+  console.log(session, "session")
+
   const form = useForm({
     mode: "onChange",
+    defaultValues: {
+      username: session.user.name,
+      bio: session.user.bio,
+      image: session.user.avatar,
+      urls: session.user.urls,
+    },
   })
 
   const { fields, append } = useFieldArray({
@@ -26,19 +36,14 @@ export function ProfileForm() {
     control: form.control,
   })
 
-  function onSubmit(data: any) {
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    })
-  }
+  const onSubmit = async (data: ProfileFormData) => {
+    const result = await updateProfile(data);
+    console.log(result)
 
+  }
   return (
     <Form {...form}>
+      {/* @ts-ignore */}
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
 
         <FormField
@@ -62,7 +67,7 @@ export function ProfileForm() {
             <FormItem>
               <FormLabel>Username</FormLabel>
               <FormControl>
-                <Input placeholder="shadcn" {...field} />
+                <Input placeholder="Enter user name" {...field} />
               </FormControl>
               <FormDescription>
                 This is your public display name. It can be your real name or a
@@ -72,32 +77,7 @@ export function ProfileForm() {
             </FormItem>
           )}
         />
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a verified email to display" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  <SelectItem value="m@example.com">m@example.com</SelectItem>
-                  <SelectItem value="m@google.com">m@google.com</SelectItem>
-                  <SelectItem value="m@support.com">m@support.com</SelectItem>
-                </SelectContent>
-              </Select>
-              <FormDescription>
-                You can manage verified email addresses in your{" "}
-                <Link href="/examples/forms">email settings</Link>.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+      
         <FormField
           control={form.control}
           name="bio"

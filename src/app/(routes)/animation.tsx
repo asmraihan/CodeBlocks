@@ -47,7 +47,7 @@ export function Animation({githubStars} : {githubStars: number | null}) {
       >
         Share and Explore
         <br />
-        Code Snippets
+        Code Blocks
         <br />
         with Ease
       </motion.h1>
@@ -57,7 +57,7 @@ export function Animation({githubStars} : {githubStars: number | null}) {
         variants={FADE_UP_ANIMATION_VARIANTS}
       >
         Code Blocks is a code snippet manager that allows you to create, share, and
-        explore code snippets.
+        explore code blocks.
       </motion.p>
       <motion.div
         className="mt-4 flex items-center justify-center gap-x-6"

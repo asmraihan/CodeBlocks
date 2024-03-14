@@ -8,9 +8,9 @@ import { GeistSans } from "geist/font";
 import { Container } from "@/components/shared/container";
 import { Toaster } from "sonner";
 
-const title = "CodeBlocks - Manage your code snippets with ease.";
+const title = "CodeBlocks - Manage your code blocks with ease.";
 const description =
-  "Code Blocks is a UI blocks manager that allows you to create, share, and explore code snippets.";
+  "Code Blocks is a UI blocks manager that allows you to create, share, and explore code blocks.";
 
 export const metadata: Metadata = {
   title,

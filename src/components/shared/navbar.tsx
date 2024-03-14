@@ -15,7 +15,6 @@ import ProfileDropdown from "./profile-dropdown";
 import { ModeToggle } from "./mode-toggle";
 
 import Cmdk from "./cmdk";
-import { useAuthStore } from "@/lib/store/authStore";
 
 export default function Navbar({ session }: any) {
   const pathname = usePathname();
@@ -25,8 +24,8 @@ export default function Navbar({ session }: any) {
     router.push("/signin");
   }
 
-  const user = useAuthStore((state) => state.user);
-  console.log(user, "user zustand")
+  // const user = useAuthStore((state) => state.user);
+  // console.log(user, "user zustand")
   return (
     <header
       className={`sticky top-0 border-b px-3 z-50 ${pathname === "/projects"
@@ -71,11 +70,11 @@ export default function Navbar({ session }: any) {
 
             {session ? (
               <Link
-                href={`/profile/${session?.user?.name}`}
+                href={`/profile/${session?.user?.id}`}
                 className={cn(
                   "transition-colors hover:text-foreground/80 text-sm font-normal",
                   pathname.startsWith("/profile") &&
-                    session.user.name === pathname.split("/")[2]
+                    session.user.id === pathname.split("/")[2]
                     ? "text-foreground"
                     : "text-foreground/60"
                 )}

@@ -2,6 +2,7 @@ import { Separator } from "@/components/ui/separator"
 import { Metadata } from "next"
 import Image from "next/image"
 import { SidebarNav } from "./sidebar-nav"
+import { getSession } from "@/lib/action/authActions"
 
 
 
@@ -10,31 +11,36 @@ export const metadata: Metadata = {
   description: "Advanced form example using react-hook-form and Zod.",
 }
 
-const sidebarNavItems = [
-  {
-    title: "Profile",
-    href: "/profile/John%20Doe",
-  },
-  {
-    title: "Account",
-    href: "/profile/John%20Doe/account",
-  },
-  {
-    title: "Notifications",
-    href: "/profile/John%20Doe/notifications",
-  },
-  {
-    title: "Code Snippets",
-    href: "/profile/John%20Doe/code",
-  }
-  
-]
+
 
 interface SettingsLayoutProps {
   children: React.ReactNode
 }
 
-export default function SettingsLayout({ children }: SettingsLayoutProps) {
+export default async function SettingsLayout({ children }: SettingsLayoutProps) {
+  const session = await getSession();
+  console.log(session, "session")
+
+  const sidebarNavItems = [
+    {
+      title: "Profile",
+      href: `/profile/${session?.user?.id}`
+    },
+    {
+      title: "Account",
+      href: `/profile/${session?.user?.id}/account`
+    },
+    {
+      title: "Notifications",
+      href: `/profile/${session?.user?.id}/notifications`
+    },
+    {
+      title: "Your Blocks",
+      href: `/profile/${session?.user?.id}/code`
+    }
+
+  ]
+
   return (
     <>
       <div className="md:hidden">
@@ -65,7 +71,9 @@ export default function SettingsLayout({ children }: SettingsLayoutProps) {
           <aside className="-mx-4 lg:w-1/5">
             <SidebarNav items={sidebarNavItems} />
           </aside>
-          <div className="flex-1 lg:max-w-2xl">{children}</div>
+          <div className="flex-1 lg:max-w-2xl">
+            {children}
+          </div>
         </div>
       </div>
     </>

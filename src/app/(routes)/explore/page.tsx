@@ -22,8 +22,9 @@ import { RotateText } from "./variant-previews";
 
 import { getSnippets } from "@/lib/fetchers/getSnippets";
 import PreviewComp from "./PreviewComp";
+import { Heart } from "lucide-react";
 
-interface Snippet {
+interface CodeBlock {
   id: string;
   createdAt: Date;
   updatedAt: Date;
@@ -38,37 +39,30 @@ export default function Home() {
   let generateZeros = (n: number) => Array(n).fill(0);
   let [keys, setKeys] = React.useState(generateZeros(20));
 
-  const [variants, setVariants] = React.useState<Snippet[] | { error: any }[]>([]);
+  const [codeBlocks, setCodeBlocks] = React.useState<CodeBlock[] | { error: any }[]>([]);
 
-  console.log(variants, "variants")
+  console.log(codeBlocks, "codeBlocks")
 
   useEffect(() => {
     const data = async () => {
       const data = await getSnippets();
-      setVariants(data as Snippet[]);
+      setCodeBlocks(data as CodeBlock[]);
     };
     data();
   }
     , []);
 
-  function restartAnimation(index: number) {
-    setKeys((prevKeys) => {
-      const newKeys = [...prevKeys]; // copy the previous keys
-      newKeys[index] += 1; // increment the key at the given index
-      return newKeys;
-    });
-  }
 
   let [query, setQuery] = React.useState("");
 
-  let filteredVariants =
+  let filteredBlocks =
     query === ""
-      ? variants
-      : variants.filter((variant): variant is Snippet => {
-        if ('error' in variant) {
+      ? codeBlocks
+      : codeBlocks.filter((block): block is CodeBlock => {
+        if ('error' in block) {
           return false;
         }
-        return variant.title.toLowerCase().includes(query.toLowerCase());
+        return block.title.toLowerCase().includes(query.toLowerCase());
       });
 
   const scope = { RotateText };
@@ -82,30 +76,29 @@ export default function Home() {
       <div className="w-full">
         <div className="flex flex-col items-center min-h-screen py-2 space-y-12">
           <div className="mb-6 w-full">
-            <Spotlight filteredVariants={filteredVariants} />
+            <Spotlight filteredBlocks={filteredBlocks} />
           </div>
-          {filteredVariants && filteredVariants.length > 0 ? (
-            filteredVariants.map((variant: Snippet | { error: any; }, index) => {
-              if ('error' in variant) {
-                return <div>Error: {variant.error}</div>;
+          {filteredBlocks && filteredBlocks.length > 0 ? (
+            filteredBlocks.map((block: CodeBlock | { error: any; }, index) => {
+              if ('error' in block) {
+                return <div>Error: {block.error}</div>;
               } else {
                 return (
                   <Tabs defaultValue="preview" className="w-full" key={index}>
                     <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center">
                       <div className="flex justify-between w-full mb-2 lg:mb-0">
                         <h1
-                          id={variant.title.toLowerCase().replace(" ", "-")}
+                          id={block.title.toLowerCase().replace(" ", "-")}
                           className="text-xl"
                         >
-                          {variant.title}
+                          {block.title}
                         </h1>
                         <Button
                           variant="ghost"
                           className="lg:hidden"
                           size="icon"
-                          onClick={() => restartAnimation(index)}
                         >
-                          <ReloadIcon className="w-4 h-4" />
+                          <Heart className="w-4 h-4" />
                         </Button>
                       </div>
                       <div className="flex flex-col lg:flex-row space-y-4 lg:space-y-0 space-x-0 lg:space-x-6">
@@ -120,9 +113,8 @@ export default function Home() {
                                 <Button
                                   variant="ghost"
                                   size="icon"
-                                  onClick={() => restartAnimation(index)}
                                 >
-                                  <ReloadIcon className="w-4 h-4" />
+                                 <Heart className="w-4 h-4" />
                                 </Button>
                               </TooltipTrigger>
                               <TooltipContent className="mr-12">
@@ -136,7 +128,7 @@ export default function Home() {
                     <TabsContent value="preview">
                       <Card className="bg-background">
                         <CardContent className="bg-background text-primary space-y-2 mt-4 overflow-hidden">
-                          <PreviewComp {...variant} />
+                          <PreviewComp {...block} />
                         </CardContent>
                       </Card>
                     </TabsContent>
@@ -148,7 +140,7 @@ export default function Home() {
                               <SyntaxHighlighter showLineNumbers customStyle={{ background: 'transparent' }}
                                 //@ts-ignore
                                 language="jsx" style={vividBlack}>
-                                {variant.code}
+                                {block.code}
                               </SyntaxHighlighter>
                             </ScrollArea>
                           </div>
@@ -162,10 +154,10 @@ export default function Home() {
           ) : (
             <div>
               <h1 className="text-center font-display text-4xl font-bold tracking-[-0.02em] drop-shadow-sm md:text-7xl md:leading-[5rem]">
-                No variants found.
+                No Code found.
               </h1>
               <p className="text-center">
-                {" "} If you want to see a variant added, please message me on{" "}
+                {" "} If you want to see a Code added, please message me on{" "}
                 <Link
                   className="text-primary underline"
                   href="https://www.facebook.com/asmraihanbh"

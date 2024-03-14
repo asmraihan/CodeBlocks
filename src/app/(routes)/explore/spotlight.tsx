@@ -15,7 +15,7 @@ import {
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
-export function Spotlight({ filteredVariants }: any) {
+export function Spotlight({ filteredBlocks }: any) {
   const [open, setOpen] = React.useState(false);
 
   React.useEffect(() => {
@@ -54,7 +54,7 @@ export function Spotlight({ filteredVariants }: any) {
               <CalendarIcon className="mr-2 h-4 w-4" />
               <span>Calendar</span>
             </CommandItem> */}
-            {filteredVariants.map((variant: any, index: number) => (
+            {filteredBlocks.map((variant: any, index: number) => (
               <CommandItem
                 key={index}
                 onSelect={() => {
