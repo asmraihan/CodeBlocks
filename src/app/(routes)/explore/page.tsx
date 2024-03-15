@@ -23,8 +23,9 @@ import { RotateText } from "./variant-previews";
 import { getSnippets } from "@/lib/fetchers/getSnippets";
 import PreviewComp from "./PreviewComp";
 import { Heart } from "lucide-react";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
 
-interface CodeBlock {
+interface CodeBlockProps {
   id: string;
   createdAt: Date;
   updatedAt: Date;
@@ -39,18 +40,22 @@ export default function Home() {
   let generateZeros = (n: number) => Array(n).fill(0);
   let [keys, setKeys] = React.useState(generateZeros(20));
 
-  const [codeBlocks, setCodeBlocks] = React.useState<CodeBlock[] | { error: any }[]>([]);
+
+  const [isLoading, setIsLoading] = React.useState(true);
+  const [codeBlocks, setCodeBlocks] = React.useState<CodeBlockProps[] | { error: any }[]>([]);
 
   console.log(codeBlocks, "codeBlocks")
 
   useEffect(() => {
     const data = async () => {
+      setIsLoading(true);
       const data = await getSnippets();
-      setCodeBlocks(data as CodeBlock[]);
+      setCodeBlocks(data as CodeBlockProps[]);
+      setIsLoading(false);
     };
     data();
   }
-    , []);
+  , []);
 
 
   let [query, setQuery] = React.useState("");
@@ -58,28 +63,31 @@ export default function Home() {
   let filteredBlocks =
     query === ""
       ? codeBlocks
-      : codeBlocks.filter((block): block is CodeBlock => {
+      : codeBlocks.filter((block): block is CodeBlockProps => {
         if ('error' in block) {
           return false;
         }
         return block.title.toLowerCase().includes(query.toLowerCase());
       });
 
-  const scope = { RotateText };
 
-  const code = `
-  <RotateText />
-`
+  if (isLoading) {
+    return (
+      <div className="flex h-full w-full items-center justify-center mt-[40vh]">
+        <LoadingSpinner size={80} />
+      </div>
+    );
+  }
 
   return (
     <div className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8">
       <div className="w-full">
         <div className="flex flex-col items-center min-h-screen py-2 space-y-12">
-          <div className="mb-6 w-full">
+          {/* <div className="mb-6 w-full">
             <Spotlight filteredBlocks={filteredBlocks} />
-          </div>
+          </div> */}
           {filteredBlocks && filteredBlocks.length > 0 ? (
-            filteredBlocks.map((block: CodeBlock | { error: any; }, index) => {
+            filteredBlocks.map((block: CodeBlockProps | { error: any; }, index) => {
               if ('error' in block) {
                 return <div>Error: {block.error}</div>;
               } else {
@@ -153,7 +161,7 @@ export default function Home() {
             })
           ) : (
             <div>
-              <h1 className="text-center font-display text-4xl font-bold tracking-[-0.02em] drop-shadow-sm md:text-7xl md:leading-[5rem]">
+              <h1 className="text-center font-display text-4xl font-bold tracking-[-0.02em] drop-shadow-sm md:text-7xl md:leading-[5rem] mt-16">
                 No Code found.
               </h1>
               <p className="text-center">

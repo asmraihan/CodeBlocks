@@ -43,7 +43,7 @@ export function AvatarUpload({
 					inputRef.current?.click()
 				}}
 			>
-				<PencilIcon className="w-4 h-4 text-black"/>
+				<PencilIcon className="w-4 h-4 text-white dark:text-black"/>
 			</Button>
 			<Input
 				ref={inputRef}

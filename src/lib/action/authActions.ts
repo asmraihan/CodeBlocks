@@ -55,7 +55,7 @@ export async function userRegister(data: any) {
   if (!newUser) {
     return { error: "Error creating user" };
   }
-  
+
   return { message: "User created", user: newUser };
   revalidatePath("/")
 }
@@ -74,41 +74,90 @@ export async function userLogin(data: Inputs) {
     return { error: "Invalid email or password" };
   }
 
-    // Create the session
-    const expires = new Date(Date.now() + 10 * 180000);
-    const session = await encrypt({ user, expires });
-    // Save the session in a cookie
-    cookies().set("session", session, { expires, httpOnly: true });
-    return { message: true, user: user }
+  // Create the session
+  const expires = new Date(Date.now() + 10 * 180000);
+  const sessionToken = await encrypt({ user, expires });
+
+  // Save the session in a cookie
+  cookies().set("session", sessionToken, { expires, httpOnly: true });
+
+  // Save the session in the database
+  await prisma.session.create({
+    data: {
+      sessionToken,
+      user_id: user.id,
+      expires,
+    },
+  });
+  return { message: true, user: user }
 }
 
-export async function logout() {
-  console.log("logout")
-  // Destroy the session
-  cookies().set("session", "", { expires: new Date(0) });
-  redirect("/signin");
-}
 
 
 export async function getSession() {
-  const session = cookies().get("session")?.value;
-  if (!session) return null;
-  return await decrypt(session);
+  const sessionToken = cookies().get("session")?.value;
+  if (!sessionToken) return null;
+
+  const session = await prisma.session.findUnique({
+    where: { sessionToken },
+    include: {
+      user: true, 
+    },
+  });
+
+  if (!session || new Date() > new Date(session.expires)) {
+    // The session is not found or has expired
+    return null;
+  }
+
+  return session;
 }
 
 export async function updateSession(request: NextRequest) {
-  const session = request.cookies.get("session")?.value;
+  const sessionToken = request.cookies.get("session")?.value;
+  if (!sessionToken) return;
+
+  const session = await prisma.session.findUnique({
+    where: { sessionToken },
+    include: {
+      user: true  
+    },
+  });
+
   if (!session) return;
 
   // Refresh the session so it doesn't expire
-  const parsed = await decrypt(session);
-  parsed.expires = new Date(Date.now() + 10 * 180000);
+  const expires = new Date(Date.now() + 10 * 180000); // adjust the session duration as needed
+
+  // Update the session in the database
+  await prisma.session.update({
+    where: { sessionToken },
+    data: { expires },
+  });
+
+  // Update the session cookie
   const res = NextResponse.next();
   res.cookies.set({
     name: "session",
-    value: await encrypt(parsed),
+    value: await encrypt({ user: session.user, expires }), // Use the user from the session
     httpOnly: true,
-    expires: parsed.expires,
+    expires,
   });
   return res;
+}
+
+
+export async function logout() {
+  // Get the session token
+  const sessionToken = cookies().get("session")?.value;
+  if (sessionToken) {
+    // Delete the session from the database
+    await prisma.session.delete({
+      where: { sessionToken },
+    });
+  }
+
+  // Clear the session cookie
+  cookies().set("session", "", { expires: new Date(0) });
+  redirect("/signin");
 }

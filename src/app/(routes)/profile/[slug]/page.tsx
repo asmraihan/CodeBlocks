@@ -3,9 +3,16 @@ import { ProfileForm } from "./profile-form";
 import { getSession } from "@/lib/action/authActions";
 import { redirect } from "next/navigation";
 
-export default async function SettingsProfilePage() {
+interface ProfilePageProps {
+  params: {
+    id: string
+  }
+}
+
+export default async function SettingsProfilePage({params} : ProfilePageProps) {
+
+  console.log(params, "params")
   const session = await getSession();
-  console.log(session, "session")
   if (!session?.user) {
     redirect("/signup");
   }

@@ -19,7 +19,6 @@ import { ProfileFormData } from "@/lib/types"
 
 
 export function ProfileForm({session} : {session: any}) {
-  console.log(session, "session")
 
   const form = useForm({
     mode: "onChange",
