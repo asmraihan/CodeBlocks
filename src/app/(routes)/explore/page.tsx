@@ -24,6 +24,9 @@ import { getSnippets } from "@/lib/fetchers/getSnippets";
 import PreviewComp from "./PreviewComp";
 import { Heart } from "lucide-react";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import { addBookmark, removeBookmark } from "@/lib/action/bookmark";
+import { getSession } from "@/lib/action/authActions";
+import { toast } from "sonner";
 
 interface CodeBlockProps {
   id: string;
@@ -34,6 +37,7 @@ interface CodeBlockProps {
   code: string;
   language: string;
   authorId: string;
+  bookmarked?: boolean;
 };
 
 export default function Home() {
@@ -48,13 +52,15 @@ export default function Home() {
   useEffect(() => {
     const data = async () => {
       setIsLoading(true);
-      const data = await getSnippets();
+      const user = await getSession();
+      const data = await getSnippets(user?.user.id as string);
+      console.log(data, "data")
       setCodeBlocks(data as CodeBlockProps[]);
       setIsLoading(false);
     };
     data();
   }
-  , []);
+    , []);
 
 
   let [query, setQuery] = React.useState("");
@@ -76,6 +82,30 @@ export default function Home() {
         <LoadingSpinner size={80} />
       </div>
     );
+  }
+
+  const handleBookMark = async (block: CodeBlockProps) => {
+    const user = await getSession();
+    if (block.bookmarked) {
+      const result = await removeBookmark(user?.user?.id as string, block.id as string);
+      if ('id' in result) {
+        toast.success("Bookmark removed successfully.");
+        // Update the state to reflect the change
+        //@ts-ignore
+        setCodeBlocks(codeBlocks.map(block => block.id === block.id ? { ...block, bookmarked: false } : block));
+      } else {
+        toast.error("Something went wrong. Please try again.");
+      }
+    } else {
+      const result = await addBookmark(user?.user?.id as string, block?.id as string);
+      if ('id' in result) {
+        toast.success("Bookmark added successfully.");
+        //@ts-ignore
+        setCodeBlocks(codeBlocks.map(block => block.id === block.id ? { ...block, bookmarked: true } : block));
+      } else {
+        toast.error("Something went wrong. Please try again.");
+      }
+    }
   }
 
   return (
@@ -120,12 +150,13 @@ export default function Home() {
                                 <Button
                                   variant="ghost"
                                   size="icon"
+                                  onClick={() => handleBookMark(block)}
                                 >
-                                 <Heart className="w-4 h-4" />
+                                  <Heart className={`w-4 h-4 ${block.bookmarked ? 'text-red-500 fill-red-500' : 'text-gray-500'}`} />
                                 </Button>
                               </TooltipTrigger>
                               <TooltipContent className="mr-12">
-                                <p>Restart Animation</p>
+                                <p>Mark as favorite</p>
                               </TooltipContent>
                             </Tooltip>
                           </TooltipProvider>

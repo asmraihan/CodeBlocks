@@ -20,7 +20,7 @@ export async function updateProfile(formData: ProfileFormData) {
     try {
         const result = await prisma.user.update({
             where: {
-                id: session.user.id
+                id: session?.user.id 
             },
             data: {
                 name: formData.username,

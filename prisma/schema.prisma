@@ -35,9 +35,8 @@ model Session {
   user         User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
 
-
 model Url {
-  id     String  @id @default(auto()) @map("_id") @db.ObjectId
+  id     String @id @default(auto()) @map("_id") @db.ObjectId
   value  String
   userId String @map("user_id") @db.ObjectId
 
@@ -56,8 +55,9 @@ model User {
   accounts      Account[]
   sessions      Session[]
   snippets      Snippet[]
+  bookmarks     Bookmark[]
   emailVerified DateTime?
-  createdAt     DateTime  @default(now())
+  createdAt     DateTime   @default(now())
 }
 
 model VerificationToken {
@@ -78,6 +78,18 @@ model Snippet {
   code      String
   language  String
 
-  authorId String @map("author_id") @db.ObjectId
-  author   User   @relation(fields: [authorId], references: [id])
+  authorId  String     @map("author_id") @db.ObjectId
+  author    User       @relation(fields: [authorId], references: [id])
+  bookmarks Bookmark[]
+}
+
+model Bookmark {
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String @map("user_id") @db.ObjectId
+  snippetId String @map("snippet_id") @db.ObjectId
+
+  user    User    @relation(fields: [userId], references: [id])
+  snippet Snippet @relation(fields: [snippetId], references: [id])
+
+  @@unique([userId, snippetId])
 }
