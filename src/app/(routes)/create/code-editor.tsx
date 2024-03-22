@@ -9,7 +9,7 @@ import "ace-builds/src-noconflict/mode-tsx";
 import "ace-builds/src-noconflict/mode-python";
 
 import "ace-builds/src-noconflict/theme-github";
-import "ace-builds/src-noconflict/theme-tomorrow_night_bright";
+import "ace-builds/src-noconflict/theme-monokai";
 import { Skeleton } from "@/components/ui/skeleton";
 
 
@@ -32,7 +32,7 @@ function CodeEditor({
       {editorLoaded ? (
         <AceEditor
           mode={language}
-          theme={theme === "light" ? "github" : "tomorrow_night_bright"}
+          theme={theme === "light" ? "github" : "monokai"}
           onChange={handleCodeChange}
           name="UNIQUE_ID_OF_DIV"
           editorProps={{ $blockScrolling: true }}

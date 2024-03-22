@@ -37,7 +37,6 @@ export function ProfileForm({session} : {session: any}) {
 
   const onSubmit = async (data: ProfileFormData) => {
     const result = await updateProfile(data);
-    console.log(result)
 
   }
   return (

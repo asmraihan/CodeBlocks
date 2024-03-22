@@ -11,7 +11,6 @@ import { Container } from "@/components/shared/container"
 export default async function GeneralLayout({ children }: React.PropsWithChildren) {
 
   const session = await getSession();
-  console.log(session, "session")
   return (
     <div>
       <Container>

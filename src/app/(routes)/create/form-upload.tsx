@@ -17,7 +17,6 @@ export default function FormUpload() {
 
   const handleCodeChange = (newValue: string) => {
     setCode(newValue);
-    console.log(newValue);
   };
   return (
     <form

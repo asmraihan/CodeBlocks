@@ -1,14 +1,11 @@
 "use client";
 
 import React from "react";
-// import { useSession } from "next-auth/react";
-// import { signIn } from "next-auth/react";
 
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { usePathname, useRouter } from "next/navigation";
-            <CodeIcon className="h-[1.4rem] w-[1.4rem]" />
 
 import { CodeIcon, MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import ProfileDropdown from "./profile-dropdown";
@@ -24,8 +21,6 @@ export default function Navbar({ session }: any) {
     router.push("/signin");
   }
 
-  // const user = useAuthStore((state) => state.user);
-  // console.log(user, "user zustand")
   return (
     <header
       className={`sticky top-0 border-b px-3 z-50 ${pathname === "/projects"

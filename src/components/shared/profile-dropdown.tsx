@@ -24,7 +24,6 @@ export default function ProfileDropdown({ session }: any) {
 
 
     const signOut = async () => {
-        console.log("Signing out");
         await logout();
     };
     return (

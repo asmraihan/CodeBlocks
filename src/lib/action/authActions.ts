@@ -35,8 +35,6 @@ export async function decrypt(input: string): Promise<any> {
 
 
 export async function userRegister(data: any) {
-  console.log(data)
-
   const user = await prisma.user.findUnique({ where: { email: data.email } });
 
   if (user) {
@@ -75,7 +73,7 @@ export async function userLogin(data: Inputs) {
   }
 
   // Create the session
-  const expires = new Date(Date.now() + 10 * 180000);
+  const expires = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
   const sessionToken = await encrypt({ user, expires });
 
   // Save the session in a cookie
@@ -114,7 +112,9 @@ export async function getSession() {
 }
 
 export async function updateSession(request: NextRequest) {
+  console.log(request, "request")
   const sessionToken = request.cookies.get("session")?.value;
+  console.log(sessionToken)
   if (!sessionToken) return;
 
   const session = await prisma.session.findUnique({
@@ -127,7 +127,7 @@ export async function updateSession(request: NextRequest) {
   if (!session) return;
 
   // Refresh the session so it doesn't expire
-  const expires = new Date(Date.now() + 10 * 180000); // adjust the session duration as needed
+  const expires = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000); // adjust the session duration as needed
 
   // Update the session in the database
   await prisma.session.update({

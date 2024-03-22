@@ -1,12 +1,25 @@
-import { NextRequest,NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { getSession, updateSession } from "@/lib/action/authActions";
 
+
+
 export async function middleware(request: NextRequest) {
-  return await updateSession(request);
+  // await updateSession(request);
+  if (request.nextUrl.pathname === '/') {
+    try {
+      console.log('middleware triggered')
+    } catch (err) {
+      console.error(err)
+    }
+  }
+  return NextResponse.next()
 }
 
 
 
+export const matcher = {
+  matcher: ['/'],
+}
 
 // export const config = {
 //   matcher: ['/((?!.+\\.[\\w]+$|_next).*)', '/', '/(api|trpc)(.*)'],

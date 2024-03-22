@@ -44,7 +44,6 @@ export default function Home() {
   const [isLoading, setIsLoading] = React.useState(true);
   const [codeBlocks, setCodeBlocks] = React.useState<CodeBlockProps[] | { error: any }[]>([]);
 
-  console.log(codeBlocks, "codeBlocks")
 
   useEffect(() => {
     const data = async () => {

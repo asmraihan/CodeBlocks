@@ -46,7 +46,6 @@ export function SignInForm() {
         startTransition(async () => {
             try {
                 const res = await userLogin(data);
-                console.log(res);
                 if (res && res.message) {
                     router.push("/");
                 } else {
