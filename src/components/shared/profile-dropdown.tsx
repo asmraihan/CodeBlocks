@@ -17,11 +17,8 @@ import { useRouter } from "next/navigation";
 import { logout } from "@/lib/action/authActions";
 
 export default function ProfileDropdown({ session }: any) {
-    //   const { data: session } = useSession();
 
     const router = useRouter();
-
-
 
     const signOut = async () => {
         await logout();
@@ -30,13 +27,13 @@ export default function ProfileDropdown({ session }: any) {
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
                 <Button variant="ghost">
-                    {/* <Image
+                    <Image
                         className="w-6 h-6 transition-opacity duration-300 rounded-full select-none ring-1 ring-zinc-100/10 hover:opacity-80"
-                        src={session?.user?.image}
+                        src={`/images/avatars/${session?.user?.avatar}`}
                         alt="avatar"
                         height={48}
                         width={48}
-                    /> */}
+                    />
 
                     <span className="ml-2">{session?.user?.name ? session?.user?.name : "Update Profile"}</span>
                 </Button>

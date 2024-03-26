@@ -20,6 +20,8 @@ interface SettingsLayoutProps {
 export default async function SettingsLayout({ children }: SettingsLayoutProps) {
   const session = await getSession();
 
+  console.log(session)
+
   const sidebarNavItems = [
     {
       title: "Profile",

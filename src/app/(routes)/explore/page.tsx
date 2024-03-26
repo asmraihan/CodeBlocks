@@ -83,7 +83,7 @@ export default function Home() {
       </div>
     );
   }
-
+  
   const handleBookMark = async (block: CodeBlockProps) => {
     const user = await getSession();
     if (block.bookmarked) {
@@ -92,7 +92,7 @@ export default function Home() {
         toast.success("Bookmark removed successfully.");
         // Update the state to reflect the change
         //@ts-ignore
-        setCodeBlocks(codeBlocks.map(block => block.id === block.id ? { ...block, bookmarked: false } : block));
+        setCodeBlocks(codeBlocks.map(cb => cb.id === block.id ? { ...cb, bookmarked: false } : cb));
       } else {
         toast.error("Something went wrong. Please try again.");
       }
@@ -101,7 +101,7 @@ export default function Home() {
       if ('id' in result) {
         toast.success("Bookmark added successfully.");
         //@ts-ignore
-        setCodeBlocks(codeBlocks.map(block => block.id === block.id ? { ...block, bookmarked: true } : block));
+        setCodeBlocks(codeBlocks.map(cb => cb.id === block.id ? { ...cb, bookmarked: true } : cb));
       } else {
         toast.error("Something went wrong. Please try again.");
       }

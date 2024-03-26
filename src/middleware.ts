@@ -4,7 +4,7 @@ import { getSession, updateSession } from "@/lib/action/authActions";
 
 
 export async function middleware(request: NextRequest) {
-  // await updateSession(request);
+  await updateSession(request);
   if (request.nextUrl.pathname === '/') {
     try {
       console.log('middleware triggered')

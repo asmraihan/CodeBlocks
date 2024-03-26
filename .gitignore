@@ -7,7 +7,7 @@
 .yarn/install-state.gz
 
 # testing
-/coverage
+/public/images/avatars/*
 
 # next.js
 /.next/

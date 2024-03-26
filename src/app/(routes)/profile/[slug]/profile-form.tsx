@@ -10,15 +10,18 @@ import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
-import { toast } from "@/components/ui/use-toast"
 import { AvatarUpload } from "@/components/ui/avatar-upload"
 import { updateProfile } from "@/lib/action/profileUpdate"
 
 import { ProfileFormData } from "@/lib/types"
+import { useRouter } from 'next/navigation'
+import { toast } from "sonner"
 
 
 
 export function ProfileForm({session} : {session: any}) {
+
+  const router = useRouter()
 
   const form = useForm({
     mode: "onChange",
@@ -37,8 +40,15 @@ export function ProfileForm({session} : {session: any}) {
 
   const onSubmit = async (data: ProfileFormData) => {
     const result = await updateProfile(data);
-
+    console.log(result)
+    if ('error' in result) {
+      return toast("Failed to update profile")
+    } else {
+      router.refresh()
+      return toast("Profile updated successfully")
+    }
   }
+  
   return (
     <Form {...form}>
       {/* @ts-ignore */}

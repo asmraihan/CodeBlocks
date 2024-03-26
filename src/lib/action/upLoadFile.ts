@@ -31,7 +31,7 @@ export async function uploadFile(file: any, destination: string = 'random') {
 
         // Generate a unique filename using the current timestamp
         const filename = `${Date.now()}.${extension}`;
-        const path = `./files/${destination}/${filename}`;
+        const path = `./public/images/${destination}/${filename}`;
         await writeFile(path, buffer);
         return filename;
 

@@ -111,40 +111,60 @@ export async function getSession() {
   return session;
 }
 
+
+
 export async function updateSession(request: NextRequest) {
-  console.log(request, "request")
-  const sessionToken = request.cookies.get("session")?.value;
-  console.log(sessionToken)
-  if (!sessionToken) return;
-
-  const session = await prisma.session.findUnique({
-    where: { sessionToken },
-    include: {
-      user: true  
-    },
-  });
-
+  const session = request.cookies.get("session")?.value;
   if (!session) return;
 
   // Refresh the session so it doesn't expire
-  const expires = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000); // adjust the session duration as needed
-
-  // Update the session in the database
-  await prisma.session.update({
-    where: { sessionToken },
-    data: { expires },
-  });
-
-  // Update the session cookie
+  const parsed = await decrypt(session);
+  parsed.expires = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
   const res = NextResponse.next();
   res.cookies.set({
     name: "session",
-    value: await encrypt({ user: session.user, expires }), // Use the user from the session
+    value: await encrypt(parsed),
     httpOnly: true,
-    expires,
+    expires: parsed.expires,
   });
   return res;
 }
+
+
+// export async function updateSession(request: NextRequest) {
+//   console.log(request, "request")
+//   const sessionToken = request.cookies.get("session")?.value;
+//   console.log(sessionToken)
+//   if (!sessionToken) return;
+
+//   const session = await prisma.session.findUnique({
+//     where: { sessionToken },
+//     include: {
+//       user: true  
+//     },
+//   });
+
+//   if (!session) return;
+
+//   // Refresh the session so it doesn't expire
+//   const expires = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000); // adjust the session duration as needed
+
+//   // Update the session in the database
+//   await prisma.session.update({
+//     where: { sessionToken },
+//     data: { expires },
+//   });
+
+//   // Update the session cookie
+//   const res = NextResponse.next();
+//   res.cookies.set({
+//     name: "session",
+//     value: await encrypt({ user: session.user, expires }), // Use the user from the session
+//     httpOnly: true,
+//     expires,
+//   });
+//   return res;
+// }
 
 
 export async function logout() {
